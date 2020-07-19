@@ -6,16 +6,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2020/7 | Hexo</title>
+  <title>GCD使用 | Hexo</title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/archives/2020/07/index.html">
+  <meta name="description" content="从MacOSX 10.6和iOS 4.0开始，苹果个提供给开发者一个多线程并发的类库共开发者使用。这个类库的名称“Grand Central Dispatch”，也就是GCD，此类库框架提供了一套C语言的方法列表，利用这些方法开发者不仅能够做到之前NSThread同样多的事情，并且更重要的一点，此类库可以让开发者跳过负载平衡的课题，直接让应用程序在多核的设备或者电脑上本质加强性能和工作效率。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GCD使用">
+<meta property="og:url" content="http://yoursite.com/2020/07/18/GCD%E4%BD%BF%E7%94%A8/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="从MacOSX 10.6和iOS 4.0开始，苹果个提供给开发者一个多线程并发的类库共开发者使用。这个类库的名称“Grand Central Dispatch”，也就是GCD，此类库框架提供了一套C语言的方法列表，利用这些方法开发者不仅能够做到之前NSThread同样多的事情，并且更重要的一点，此类库可以让开发者跳过负载平衡的课题，直接让应用程序在多核的设备或者电脑上本质加强性能和工作效率。">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-07-18T08:54:17.000Z">
+<meta property="article:modified_time" content="2020-07-19T15:29:15.518Z">
 <meta property="article:author" content="less">
+<meta property="article:tag" content="Swift">
+<meta property="article:tag" content="GCD">
+<meta property="article:tag" content="多线程">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
@@ -165,41 +172,157 @@
               class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-GCD使用" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-<a href="/2020/07/18/GCD%E4%BD%BF%E7%94%A8/" class="archive-article-date">
-        <time datetime="2020-07-18T08:54:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-18</time>
-</a>
-
-        </div>
-    	 
+      <header class="article-header">
   
-    <h1 itemprop="name">
-	
-	  <a class="archive-article-title" href="/2020/07/18/GCD%E4%BD%BF%E7%94%A8/" target="_blank">GCD使用</a>
   
+    <h1 class="article-title" itemprop="name">
+      GCD使用
     </h1>
   
 
 
-        <div class="article-info info-on-right">
-          
+  
+  
+<a href="/2020/07/18/GCD%E4%BD%BF%E7%94%A8/" class="archive-article-date">
+        <time datetime="2020-07-18T08:54:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-18</time>
+</a>
+
+  
+  
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    <p>从MacOSX 10.6和iOS 4.0开始，苹果个提供给开发者一个多线程并发的类库共开发者使用。这个类库的名称“Grand Central Dispatch”，也就是GCD，此类库框架提供了一套C语言的方法列表，利用这些方法开发者不仅能够做到之前NSThread同样多的事情，并且更重要的一点，此类库可以让开发者跳过负载平衡的课题，直接让应用程序在多核的设备或者电脑上本质加强性能和工作效率。<a id="more"></a></p>
+<h4 id="1、队列的获取与创建"><a href="#1、队列的获取与创建" class="headerlink" title="1、队列的获取与创建"></a>1、队列的获取与创建</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 串行队列 &lt;OS_dispatch_queue_serial: serial&gt;</span></span><br><span class="line"><span class="keyword">let</span> serial = <span class="type">DispatchQueue</span>(label: <span class="string">"serial"</span>)</span><br><span class="line"><span class="comment">// 并发队列 &lt;OS_dispatch_queue_concurrent: concurrent&gt;</span></span><br><span class="line"><span class="keyword">let</span> concurrent = <span class="type">DispatchQueue</span>(label: <span class="string">"concurrent"</span>,  attributes: .concurrent)</span><br><span class="line"><span class="comment">// 主队列 &lt;OS_dispatch_queue_main: com.apple.main-thread&gt;</span></span><br><span class="line"><span class="keyword">let</span> mainQueue = <span class="type">DispatchQueue</span>.main</span><br><span class="line"><span class="comment">// 全局队列 &lt;OS_dispatch_queue_global: com.apple.root.default-qos&gt;</span></span><br><span class="line"><span class="keyword">let</span> global = <span class="type">DispatchQueue</span>.global()</span><br></pre></td></tr></table></figure>
+
+<p>GCD队列都遵循先进先出（FIFO）。所以往并发队列中添加同步任务，其执行顺序和任务的添加顺序相同。全局队列在功能上和并发队列是等价的，所以需要并发队列时，首先使用系统的全局队列。</p>
+<p><b>任务和队列不同组合方式的区别</b></p>
+<p>【主线程】中，【不同队列】 + 【不同任务】简单组合的区别。</p>
+<table>
+<thead>
+<tr>
+<th align="center">区别</th>
+<th>并发队列</th>
+<th>串行队列</th>
+<th>主队列</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">同步(sync)</td>
+<td>没有开启新线程，串行执行任务</td>
+<td>没有开启新线程，串行执行任务</td>
+<td>死锁程序不执行</td>
+</tr>
+<tr>
+<td align="center">异步(async)</td>
+<td>有开启新线程，并行执行任务</td>
+<td>有开启新线程(1条)，串行执行任务</td>
+<td>没有开启新线程，串行执行任务</td>
+</tr>
+</tbody></table>
+<h4 id="2、耗时操作"><a href="#2、耗时操作" class="headerlink" title="2、耗时操作"></a>2、耗时操作</h4><p>主队列：主队列负责主线程上调度任务，如果在主线程上已经有任务在执行，主队列会等到主线程空闲后在调度任务。通常是返回主线程更新UI的时候使用。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="number">1</span>)</span><br><span class="line"><span class="type">DispatchQueue</span>.global().async &#123;</span><br><span class="line">    <span class="comment">// 耗时操作</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="number">2</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x600003e11500&gt;&#123;number = 5, name = (null)&#125;</span></span><br><span class="line">    <span class="type">DispatchQueue</span>.main.async &#123;</span><br><span class="line">        <span class="comment">// 主线程</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="number">3</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x600003e4cd00&gt;&#123;number = 1, name = main&#125;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">print</span>(<span class="number">4</span>)</span><br><span class="line"><span class="comment">// 输出  1、4、2、3</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="3、同步执行任务"><a href="#3、同步执行任务" class="headerlink" title="3、同步执行任务"></a>3、同步执行任务</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="number">1</span>)</span><br><span class="line"><span class="type">DispatchQueue</span>.global().sync &#123;</span><br><span class="line">    sleep(<span class="type">UInt32</span>(<span class="number">5</span>))</span><br><span class="line">    <span class="built_in">print</span>(<span class="number">2</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">print</span>(<span class="number">3</span>)</span><br><span class="line"><span class="comment">// 输出  1、2、3</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="4、异步执行任务"><a href="#4、异步执行任务" class="headerlink" title="4、异步执行任务"></a>4、异步执行任务</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="number">1</span>)</span><br><span class="line"><span class="type">DispatchQueue</span>.global().async &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="number">2</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">print</span>(<span class="number">3</span>)</span><br><span class="line"><span class="comment">// 输出  1、3、2</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="5、串行同步"><a href="#5、串行同步" class="headerlink" title="5、串行同步"></a>5、串行同步</h4><p>执行完一个任务，在执行下一个任务，不开启新线程</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">"串行同步开始"</span>)</span><br><span class="line"><span class="keyword">let</span> serial = <span class="type">DispatchQueue</span>(label: <span class="string">"serial"</span>)</span><br><span class="line">serial.sync &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"1"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">serial.sync &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"2"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">serial.sync &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"3"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">print</span>(<span class="string">"串行同步结束"</span>)</span><br><span class="line"><span class="comment">/** 输出</span></span><br><span class="line"><span class="comment">* 串行同步开始</span></span><br><span class="line"><span class="comment">* 1、1、1、2、2、2、3、3、3</span></span><br><span class="line"><span class="comment">* 串行同步结束</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="6、串行异步"><a href="#6、串行异步" class="headerlink" title="6、串行异步"></a>6、串行异步</h4><p>开启新线程，但因为任务是串行的，所以还是按顺序执行任务</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">"串行异步开始"</span>)</span><br><span class="line"><span class="keyword">let</span> serial = <span class="type">DispatchQueue</span>(label: <span class="string">"serial"</span>)</span><br><span class="line">serial.async &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x6000038dd700&gt;&#123;number = 4, name = (null)&#125;</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"1"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">serial.async &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x6000038dd700&gt;&#123;number = 4, name = (null)&#125;</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"2"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">serial.async &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x6000038dd700&gt;&#123;number = 4, name = (null)&#125;</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"3"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">print</span>(<span class="string">"串行异步结束"</span>)</span><br><span class="line"><span class="comment">/** 输出</span></span><br><span class="line"><span class="comment">* 串行异步开始</span></span><br><span class="line"><span class="comment">* 串行异步结束</span></span><br><span class="line"><span class="comment">* 1、1、1、2、2、2、3、3、3</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="7、并发同步"><a href="#7、并发同步" class="headerlink" title="7、并发同步"></a>7、并发同步</h4><p>因为是同步的，所以执行完一个任务，在执行下一个任务。不会开启新线程</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">"并发同步开始"</span>)</span><br><span class="line"><span class="keyword">let</span> concurrent = <span class="type">DispatchQueue</span>(label: <span class="string">"concurrent"</span>,  attributes: .concurrent)</span><br><span class="line"><span class="comment">//let concurrent = DispatchQueue.global()</span></span><br><span class="line">concurrent.sync &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"1"</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x60000354c800&gt;&#123;number = 1, name = main&#125;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">concurrent.sync &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"2"</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x60000354c800&gt;&#123;number = 1, name = main&#125;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">concurrent.sync &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"3"</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x60000354c800&gt;&#123;number = 1, name = main&#125;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">print</span>(<span class="string">"并发同步结束"</span>)</span><br><span class="line"><span class="comment">/** 输出</span></span><br><span class="line"><span class="comment">* 并发同步开始</span></span><br><span class="line"><span class="comment">* 1、1、1、2、2、2、3、3、3</span></span><br><span class="line"><span class="comment">* 并发同步结束</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="8、并发异步"><a href="#8、并发异步" class="headerlink" title="8、并发异步"></a>8、并发异步</h4><p>任务交替执行，开启多线程</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">"并发异步开始"</span>)</span><br><span class="line"><span class="keyword">let</span> concurrent = <span class="type">DispatchQueue</span>(label: <span class="string">"concurrent"</span>,  attributes: .concurrent)</span><br><span class="line"><span class="comment">//let concurrent = DispatchQueue.global()</span></span><br><span class="line">concurrent.async &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"1"</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x600002f91500&gt;&#123;number = 5, name = (null)&#125;(number随机线程)</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">concurrent.async &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"2"</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x600002f91500&gt;&#123;number = 2, name = (null)&#125;(number随机线程)</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">concurrent.async &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"3"</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">//&lt;NSThread: 0x600002f91500&gt;&#123;number = 3, name = (null)&#125;(number随机线程)</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">print</span>(<span class="string">"并发异步结束"</span>)</span><br><span class="line"><span class="comment">/** 输出</span></span><br><span class="line"><span class="comment">* 并发异步开始</span></span><br><span class="line"><span class="comment">* 并发异步结束</span></span><br><span class="line"><span class="comment">* 1、1、2、2、1、2、3、3、3（随机顺序）</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="9、主队列同步"><a href="#9、主队列同步" class="headerlink" title="9、主队列同步"></a>9、主队列同步</h4><p>如果在主线程中运用这个方法，则会发生死锁，程序崩溃</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">DispatchQueue</span>.main.sync &#123; </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"1"</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 会发生死锁，程序崩溃</span></span><br><span class="line"><span class="comment">// Thread 1: EXC_BAD_INSTRUCTION (code=EXC_I386_INVOP, subcode=0x0)</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="10、主队列异步"><a href="#10、主队列异步" class="headerlink" title="10、主队列异步"></a>10、主队列异步</h4><p>在主线程中顺序执行（主队列是个串行队列）</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">"主队列异步开始"</span>)</span><br><span class="line"><span class="keyword">let</span> main = <span class="type">DispatchQueue</span>.main</span><br><span class="line">main.async &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x600000da4240&gt;&#123;number = 1, name = main&#125;</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"1"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">main.async &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x600000da4240&gt;&#123;number = 1, name = main&#125;</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"2"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">main.async &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x600000da4240&gt;&#123;number = 1, name = main&#125;</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"3"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">print</span>(<span class="string">"主队列异步结束"</span>)</span><br><span class="line"><span class="comment">/** 输出</span></span><br><span class="line"><span class="comment">* 主队列异步开始</span></span><br><span class="line"><span class="comment">* 主队列异步结束</span></span><br><span class="line"><span class="comment">* 1、1、1、2、2、2、3、3、3</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="11、GCD栅栏"><a href="#11、GCD栅栏" class="headerlink" title="11、GCD栅栏"></a>11、GCD栅栏</h4><p>当任务需要异步进行，但是这些任务需要分成两组来执行，第一组完成之后才能进行第二组的操作。这时候就用了GCD的栅栏方法</p>
+<p>在Swift中栅栏不再是一个单独的方法，而是DispatchWorkItemFlags结构体重的一个属性。sync/async方法的其中一个参数类型即为DispatchWorkItemFlags。栅栏函数就是一个分隔任务，将其添加到需要的栅栏的队列中，以分隔添加前后的其他任务。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">"栅栏开始"</span>)</span><br><span class="line"><span class="comment">// 如果使用栅栏函数的话必须使用自己创建的并发队列</span></span><br><span class="line"><span class="comment">// * block as a barrier (relevant only on DISPATCH_QUEUE_CONCURRENT queues).（官方文档）</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> concurrent = <span class="type">DispatchQueue</span>(label: <span class="string">"concurrent"</span>, attributes: .concurrent)</span><br><span class="line"><span class="comment">// let concurrent = DispatchQueue.global()</span></span><br><span class="line">concurrent.async &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x600001979300&gt;&#123;number = 6, name = (null)&#125;(number随机线程)</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"1"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">concurrent.async &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x600001979300&gt;&#123;number = 6, name = (null)&#125;(number随机线程)</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"2"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">        </span><br><span class="line">concurrent.async(flags: .barrier) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x600001979300&gt;&#123;number = 6, name = (null)&#125;</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"异步栅栏函数"</span>)</span><br><span class="line">&#125;</span><br><span class="line">        </span><br><span class="line"><span class="comment">// concurrent.sync(flags: .barrier) &#123;</span></span><br><span class="line"><span class="comment">//    print(Thread.current)</span></span><br><span class="line"><span class="comment">//    print("同步栅栏函数")</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line">concurrent.async &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x600001979300&gt;&#123;number = 6, name = (null)&#125;(number随机线程)</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"3"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">concurrent.async &#123;</span><br><span class="line">   <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x600001979300&gt;&#123;number = 6, name = (null)&#125;(number随机线程)</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"4"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">print</span>(<span class="string">"栅栏结束"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">/** 输出 （异步栅栏函数）</span></span><br><span class="line"><span class="comment">* 栅栏开始</span></span><br><span class="line"><span class="comment">* 栅栏结束</span></span><br><span class="line"><span class="comment">* 1、2、1、1、2、2 （随机顺序）</span></span><br><span class="line"><span class="comment">* 异步栅栏函数</span></span><br><span class="line"><span class="comment">* 3、3、4、4、4、3 （随机顺序且在栅栏函数后面）</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/** 输出 （同步栅栏函数）</span></span><br><span class="line"><span class="comment">* 栅栏开始</span></span><br><span class="line"><span class="comment">* 1、2、1、1、2、2 （随机顺序）</span></span><br><span class="line"><span class="comment">* 同步栅栏函数（会阻塞当前线程）</span></span><br><span class="line"><span class="comment">* 栅栏结束</span></span><br><span class="line"><span class="comment">* 3、3、4、4、4、3 （随机顺序且在栅栏函数后面）</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="12、GCD延迟执行"><a href="#12、GCD延迟执行" class="headerlink" title="12、GCD延迟执行"></a>12、GCD延迟执行</h4><p>当需要等待一会在执行一段代码时，可以用这个方法。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">DispatchQueue</span>.main.asyncAfter(deadline: .now() + <span class="number">3</span>) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="number">1</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="13、GCD队列组"><a href="#13、GCD队列组" class="headerlink" title="13、GCD队列组"></a>13、GCD队列组</h4><p>异步执行几个耗时操作，当这几个操作都完成之后再回到主线程操作，可以用队列组</p>
+<p>队列组的特征</p>
+<ul>
+<li>所有的任务都会并发的执行（不按序）。</li>
+<li>所有的异步函数都添加到队列中，然后再纳入队列组的监听范围。</li>
+<li>使用DispatchGroup().notify函数，来监听上面的任务是否完成，如果完成就调用这个方法。</li>
+</ul>
+<p><b>使用<font style: color = red>notifty</font>添加结束任务</b></p>
+<p>必须等待group中的任务执行完成后才能执行，无法定义超时</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">"GCD队列组开始"</span>)</span><br><span class="line"><span class="keyword">let</span> queue = <span class="type">DispatchQueue</span>.global()</span><br><span class="line"><span class="keyword">let</span> group = <span class="type">DispatchGroup</span>()</span><br><span class="line">        </span><br><span class="line">queue.async(group: group) &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x600001979300&gt;&#123;number = 6, name = (null)&#125;(number随机线程)</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="number">1</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">        </span><br><span class="line">queue.async(group: group) &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x600001979300&gt;&#123;number = 6, name = (null)&#125;(number随机线程)</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="number">2</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">queue.async(group: group) &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x600001979300&gt;&#123;number = 6, name = (null)&#125;(number随机线程)</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="number">3</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">        </span><br><span class="line">group.notify(queue: .main) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x6000003e4140&gt;&#123;number = 1, name = main&#125;</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"结束了"</span>)</span><br><span class="line">&#125;</span><br><span class="line">                </span><br><span class="line"><span class="built_in">print</span>(<span class="string">"GCD队列组结束"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">/** 输出 </span></span><br><span class="line"><span class="comment">* GCD队列组开始</span></span><br><span class="line"><span class="comment">* GCD队列组结束</span></span><br><span class="line"><span class="comment">* 1、2、1、1、2、3、2、3、3 （随机顺序）</span></span><br><span class="line"><span class="comment">* 结束了</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<p><b>使用<font style: color = red>wait</font>进等待——可定义超时</b></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">"GCD队列组开始"</span>)</span><br><span class="line"><span class="keyword">let</span> queue = <span class="type">DispatchQueue</span>.global()</span><br><span class="line"><span class="keyword">let</span> group = <span class="type">DispatchGroup</span>()</span><br><span class="line">        </span><br><span class="line">queue.async(group: group) &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x600001979300&gt;&#123;number = 6, name = (null)&#125;(number随机线程)</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="number">1</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">        </span><br><span class="line">queue.async(group: group) &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x600001979300&gt;&#123;number = 6, name = (null)&#125;(number随机线程)</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="number">2</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">        </span><br><span class="line">queue.async(group: group) &#123;</span><br><span class="line">    sleep(<span class="type">UInt32</span>(<span class="number">5</span>))</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x600001979300&gt;&#123;number = 6, name = (null)&#125;(number随机线程)</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="number">3</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">        </span><br><span class="line"><span class="keyword">switch</span> group.wait(timeout: <span class="type">DispatchTime</span>.now() + <span class="number">4</span>) &#123;</span><br><span class="line"><span class="keyword">case</span> .success:</span><br><span class="line">    <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x6000003e4140&gt;&#123;number = 1, name = main&#125;</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"group 任务执行结束"</span>)</span><br><span class="line"><span class="keyword">case</span> .timedOut:</span><br><span class="line">    <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x6000003e4140&gt;&#123;number = 1, name = main&#125;</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"group 任务执行超时"</span>)</span><br><span class="line">&#125;</span><br><span class="line">                </span><br><span class="line"><span class="built_in">print</span>(<span class="string">"GCD队列组结束"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">/** 输出 </span></span><br><span class="line"><span class="comment">* GCD队列组开始</span></span><br><span class="line"><span class="comment">* 1、2、1、1、2、2 （随机顺序）</span></span><br><span class="line"><span class="comment">* group 任务执行超时</span></span><br><span class="line"><span class="comment">* GCD队列组结束</span></span><br><span class="line"><span class="comment">* 3、3、3</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<p><b><font style: color = red>enter()</font>与<font style: color = red>leave()</font></b></p>
+<p>enter()是标示一个任务加入到队列，leave()标示一个队列中的任务执行完成</p>
+<p>注意：enter()与leave()必须成对调用。</p>
+<p>如果enter()后未调用leave()则不会触发notify，wait也只会timeout。</p>
+<p>如果leave()之前没有调用enter()则会引起crash</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">"GCD队列组开始"</span>)</span><br><span class="line"><span class="keyword">let</span> queue = <span class="type">DispatchQueue</span>.global()</span><br><span class="line"><span class="keyword">let</span> group = <span class="type">DispatchGroup</span>()</span><br><span class="line">        </span><br><span class="line">group.enter()</span><br><span class="line">queue.async() &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x600001979300&gt;&#123;number = 6, name = (null)&#125;(number随机线程)</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="number">1</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    group.leave()</span><br><span class="line">&#125;</span><br><span class="line">       </span><br><span class="line">group.enter()</span><br><span class="line">queue.async() &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x600001979300&gt;&#123;number = 6, name = (null)&#125;(number随机线程)</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="number">2</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    group.leave()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">        </span><br><span class="line">group.notify(queue: .main) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x6000003e4140&gt;&#123;number = 1, name = main&#125;</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"结束了"</span>)</span><br><span class="line">&#125;</span><br><span class="line">                </span><br><span class="line"><span class="built_in">print</span>(<span class="string">"GCD队列组结束"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">/** 输出 </span></span><br><span class="line"><span class="comment">* GCD队列组开始</span></span><br><span class="line"><span class="comment">* GCD队列组结束</span></span><br><span class="line"><span class="comment">* 1、2、1、1、2、2 （随机顺序）</span></span><br><span class="line"><span class="comment">* 结束了</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="14、型号量-semaphore"><a href="#14、型号量-semaphore" class="headerlink" title="14、型号量 semaphore"></a>14、型号量 semaphore</h4><p>CGD中的信号量是指DispatchSemaphore，是持有计数的信号。在DispatchSemaphore中，使用计数来完成这个功能，计数为0时等待，不可通过。计数为1或大于1时，计数减1且不等待，可通过。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> semaphore = <span class="type">DispatchSemaphore</span>(value: <span class="number">0</span>)</span><br><span class="line">semaphore.signal() <span class="comment">// 发送一个信号让信号量加1</span></span><br><span class="line">semaphore.wait() <span class="comment">// 可以使总信号量减1，当信号量总量为0时就会一直等待(阻塞所在信号)，否则就可以正常执行</span></span><br></pre></td></tr></table></figure>
+
+<p><b>信号量处理线程同步</b></p>
+<p>将异步执行任务转化成同步执行任务。</p>
+<p>使用场景：等待异步网络请求返回后执行后续任务。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> semaphore = <span class="type">DispatchSemaphore</span>(value: <span class="number">0</span>)</span><br><span class="line"><span class="type">DispatchQueue</span>.global().async &#123;</span><br><span class="line">    sleep(<span class="type">UInt32</span>(<span class="number">3</span>))</span><br><span class="line">    <span class="built_in">print</span>(<span class="number">1</span>)</span><br><span class="line">    semaphore.signal()</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">switch</span> semaphore.wait(timeout: <span class="type">DispatchTime</span>.now() + <span class="number">4</span>) &#123; <span class="comment">// 信号量为0，调用wait后阻塞线程</span></span><br><span class="line"><span class="keyword">case</span> .success:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"success"</span>)</span><br><span class="line"><span class="keyword">case</span> .timedOut:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"timedOut"</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">print</span>(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">/** 输出</span></span><br><span class="line"><span class="comment">* 1</span></span><br><span class="line"><span class="comment">* success</span></span><br><span class="line"><span class="comment">* 2</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<p><b>信号量控制最大并发数</b></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> semaphore = <span class="type">DispatchSemaphore</span>(value: <span class="number">2</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>...<span class="number">10</span> &#123;</span><br><span class="line">    semaphore.wait() <span class="comment">// 当信号量为0时，阻塞在此</span></span><br><span class="line">    <span class="type">DispatchQueue</span>.global().async &#123;</span><br><span class="line">        sleep(<span class="type">UInt32</span>(<span class="number">3</span>))</span><br><span class="line">        <span class="built_in">print</span>(i)</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current)</span><br><span class="line">        semaphore.signal() <span class="comment">// 信号量加1</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"123456"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 最多两个任务并发执行</span></span><br></pre></td></tr></table></figure>
+
+<p><b>使用DispatchSemaphore加锁</b></p>
+<p>非线程安全，即当一个变量可能同时被多个线程修改。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> semaphore = <span class="type">DispatchSemaphore</span>(value: <span class="number">1</span>)</span><br><span class="line"><span class="keyword">var</span> i = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>...<span class="number">10</span> &#123;</span><br><span class="line">    <span class="type">DispatchQueue</span>.global().async &#123;</span><br><span class="line">        semaphore.wait() <span class="comment">// 当信号量为0时，阻塞在此</span></span><br><span class="line">        <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">1</span>...<span class="number">10</span> &#123;</span><br><span class="line">            i += <span class="number">1</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">print</span>(i)</span><br><span class="line">        semaphore.signal() <span class="comment">// 信号量加1</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** 输出</span></span><br><span class="line"><span class="comment">* 10、20、30、40、50、60、70、80、90、100、110</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/** 输出（不使用DispatchSemaphore）</span></span><br><span class="line"><span class="comment">* 90、100、110、84、90、90、90、81、90、80（随机输出）</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="15、DIspatchWorkItem-与任务取消"><a href="#15、DIspatchWorkItem-与任务取消" class="headerlink" title="15、DIspatchWorkItem 与任务取消"></a>15、DIspatchWorkItem 与任务取消</h4><p>DIspatchWorkItem其实就是用来代替OC中的dispatch_block_t。如果任务是通过DIspatchWorkItem定义。在执行之前，可以执行取消操作。注意即使任务已经加入队列，只要还未执行就可以进行取消，但是无法判断任务在队列中的状态，所以一般会根据加入队列的时间确定是否可以取消。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> workItem = <span class="type">DispatchWorkItem</span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"延时任务"</span>) </span><br><span class="line">&#125;</span><br><span class="line">        </span><br><span class="line"><span class="type">DispatchQueue</span>.global().asyncAfter(deadline: .now() + <span class="number">2</span>, execute: workItem)</span><br><span class="line">workItem.cancel()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 延时任务不会打印，延迟任务已被取消</span></span><br></pre></td></tr></table></figure>
+
+<p><b>DispatchWorkItem主动执行</b></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> workItem = <span class="type">DispatchWorkItem</span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"主动执行"</span>)</span><br><span class="line">&#125;</span><br><span class="line">         </span><br><span class="line">workItem.perform()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 直接输出：主动执行</span></span><br></pre></td></tr></table></figure>
+
+<p><b>等待DispatchWorkItem执行完成</b></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> workItem = <span class="type">DispatchWorkItem</span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"执行完成"</span>)</span><br><span class="line">&#125;</span><br><span class="line">        </span><br><span class="line"><span class="type">DispatchQueue</span>.global().async(execute: workItem)</span><br><span class="line"><span class="keyword">switch</span> workItem.wait(timeout: .now() + <span class="number">2</span>) &#123;</span><br><span class="line"><span class="keyword">case</span> .success:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"success"</span>)</span><br><span class="line"><span class="keyword">case</span> .timedOut:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"timedOut"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** 输出</span></span><br><span class="line"><span class="comment">* 执行完成</span></span><br><span class="line"><span class="comment">* success</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<p><b>DispatchWorkItem执行完成通知</b></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> workItem = <span class="type">DispatchWorkItem</span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"执行完成"</span>)</span><br><span class="line">&#125;</span><br><span class="line">        </span><br><span class="line"><span class="type">DispatchQueue</span>.global().async(execute: workItem)</span><br><span class="line">        </span><br><span class="line">workItem.notify(queue: .main) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"completed"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** 输出</span></span><br><span class="line"><span class="comment">* 执行完成</span></span><br><span class="line"><span class="comment">* completed</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><ol>
+<li><a href="https://www.jianshu.com/p/2b46e5f91743" target="_blank" rel="noopener">Swift 5.1 - GCD使用总结</a></li>
+<li><a href="https://www.jianshu.com/p/2d57c72016c6" target="_blank" rel="noopener">iOS 多线程：『GCD』详尽总结</a></li>
+</ol>
+
+    
+
+    
+
+    
+
+  </div>
+  <div class="article-info article-info-index">
+    
+    
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -219,62 +342,89 @@
 		</ul>
 	</div>
 
-          
+    
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
+    
+
+    
+    <div class="clearfix"></div>
+  </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-<a href="/2020/07/17/hexo%E4%BD%BF%E7%94%A8/" class="archive-article-date">
-        <time datetime="2020-07-17T03:47:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-17</time>
-</a>
 
+
+<nav id="article-nav">
+  
+  
+    <a href="/2020/07/17/hexo%E4%BD%BF%E7%94%A8/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Hexo使用</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-	
-	  <a class="archive-article-title" href="/2020/07/17/hexo%E4%BD%BF%E7%94%A8/" target="_blank">Hexo使用</a>
-  
-    </h1>
-  
-
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">hexo</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#1、队列的获取与创建"><span class="toc-number">1.</span> <span class="toc-text">1、队列的获取与创建</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2、耗时操作"><span class="toc-number">2.</span> <span class="toc-text">2、耗时操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3、同步执行任务"><span class="toc-number">3.</span> <span class="toc-text">3、同步执行任务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4、异步执行任务"><span class="toc-number">4.</span> <span class="toc-text">4、异步执行任务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5、串行同步"><span class="toc-number">5.</span> <span class="toc-text">5、串行同步</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6、串行异步"><span class="toc-number">6.</span> <span class="toc-text">6、串行异步</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7、并发同步"><span class="toc-number">7.</span> <span class="toc-text">7、并发同步</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8、并发异步"><span class="toc-number">8.</span> <span class="toc-text">8、并发异步</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9、主队列同步"><span class="toc-number">9.</span> <span class="toc-text">9、主队列同步</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10、主队列异步"><span class="toc-number">10.</span> <span class="toc-text">10、主队列异步</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#11、GCD栅栏"><span class="toc-number">11.</span> <span class="toc-text">11、GCD栅栏</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#12、GCD延迟执行"><span class="toc-number">12.</span> <span class="toc-text">12、GCD延迟执行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#13、GCD队列组"><span class="toc-number">13.</span> <span class="toc-text">13、GCD队列组</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#14、型号量-semaphore"><span class="toc-number">14.</span> <span class="toc-text">14、型号量 semaphore</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#15、DIspatchWorkItem-与任务取消"><span class="toc-number">15.</span> <span class="toc-text">15、DIspatchWorkItem 与任务取消</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#参考"><span class="toc-number">16.</span> <span class="toc-text">参考</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
+        
+    </div>
+</aside>
 
-    
+
+
+
+
+
+
+<section id="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname =
+    'true'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function () {
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" target="_blank" rel="noopener">comments powered by
+      Disqus.</a></noscript>
+</section>
+
+
+
+
+
+
 
 
           </div>
@@ -303,8 +453,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: true,
