@@ -6,7 +6,7 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>GCD使用 | Hexo</title>
+  <title>GCD使用 | 做一只会飞的猪</title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
@@ -14,7 +14,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="GCD使用">
 <meta property="og:url" content="http://yoursite.com/2020/07/18/GCD%E4%BD%BF%E7%94%A8/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:site_name" content="做一只会飞的猪">
 <meta property="og:description" content="从MacOSX 10.6和iOS 4.0开始，苹果个提供给开发者一个多线程并发的类库共开发者使用。这个类库的名称“Grand Central Dispatch”，也就是GCD，此类库框架提供了一套C语言的方法列表，利用这些方法开发者不仅能够做到之前NSThread同样多的事情，并且更重要的一点，此类库可以让开发者跳过负载平衡的课题，直接让应用程序在多核的设备或者电脑上本质加强性能和工作效率。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-07-18T08:54:17.000Z">
@@ -25,7 +25,7 @@
 <meta property="article:tag" content="多线程">
 <meta name="twitter:card" content="summary">
   
-    <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="做一只会飞的猪" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -78,7 +78,7 @@
 			
 				<li><a href="/" target="_blank">主页</a></li>
 			
-				<li><a href="/tags/" target="_blank">作品</a></li>
+				<li><a href="/works/" target="_blank">作品</a></li>
 			
 			</ul>
 		</nav>
@@ -156,7 +156,7 @@
 				
 					<li style="width: 50%"><a href="/">主页</a></li>
 		        
-					<li style="width: 50%"><a href="/tags/">作品</a></li>
+					<li style="width: 50%"><a href="/works/">作品</a></li>
 		        
 				</ul>
 			</nav>
@@ -263,14 +263,14 @@
 <li>所有的异步函数都添加到队列中，然后再纳入队列组的监听范围。</li>
 <li>使用DispatchGroup().notify函数，来监听上面的任务是否完成，如果完成就调用这个方法。</li>
 </ul>
-<p><b>使用<font style: color = red>notifty</font>添加结束任务</b></p>
+<p><b>使用<font style: color="red">notifty</font>添加结束任务</b></p>
 <p>必须等待group中的任务执行完成后才能执行，无法定义超时</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">"GCD队列组开始"</span>)</span><br><span class="line"><span class="keyword">let</span> queue = <span class="type">DispatchQueue</span>.global()</span><br><span class="line"><span class="keyword">let</span> group = <span class="type">DispatchGroup</span>()</span><br><span class="line">        </span><br><span class="line">queue.async(group: group) &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x600001979300&gt;&#123;number = 6, name = (null)&#125;(number随机线程)</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="number">1</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">        </span><br><span class="line">queue.async(group: group) &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x600001979300&gt;&#123;number = 6, name = (null)&#125;(number随机线程)</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="number">2</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">queue.async(group: group) &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x600001979300&gt;&#123;number = 6, name = (null)&#125;(number随机线程)</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="number">3</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">        </span><br><span class="line">group.notify(queue: .main) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x6000003e4140&gt;&#123;number = 1, name = main&#125;</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"结束了"</span>)</span><br><span class="line">&#125;</span><br><span class="line">                </span><br><span class="line"><span class="built_in">print</span>(<span class="string">"GCD队列组结束"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">/** 输出 </span></span><br><span class="line"><span class="comment">* GCD队列组开始</span></span><br><span class="line"><span class="comment">* GCD队列组结束</span></span><br><span class="line"><span class="comment">* 1、2、1、1、2、3、2、3、3 （随机顺序）</span></span><br><span class="line"><span class="comment">* 结束了</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
 
-<p><b>使用<font style: color = red>wait</font>进等待——可定义超时</b></p>
+<p><b>使用<font style: color="red">wait</font>进等待——可定义超时</b></p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">"GCD队列组开始"</span>)</span><br><span class="line"><span class="keyword">let</span> queue = <span class="type">DispatchQueue</span>.global()</span><br><span class="line"><span class="keyword">let</span> group = <span class="type">DispatchGroup</span>()</span><br><span class="line">        </span><br><span class="line">queue.async(group: group) &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x600001979300&gt;&#123;number = 6, name = (null)&#125;(number随机线程)</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="number">1</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">        </span><br><span class="line">queue.async(group: group) &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x600001979300&gt;&#123;number = 6, name = (null)&#125;(number随机线程)</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="number">2</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">        </span><br><span class="line">queue.async(group: group) &#123;</span><br><span class="line">    sleep(<span class="type">UInt32</span>(<span class="number">5</span>))</span><br><span class="line">    <span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">3</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x600001979300&gt;&#123;number = 6, name = (null)&#125;(number随机线程)</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="number">3</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">        </span><br><span class="line"><span class="keyword">switch</span> group.wait(timeout: <span class="type">DispatchTime</span>.now() + <span class="number">4</span>) &#123;</span><br><span class="line"><span class="keyword">case</span> .success:</span><br><span class="line">    <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x6000003e4140&gt;&#123;number = 1, name = main&#125;</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"group 任务执行结束"</span>)</span><br><span class="line"><span class="keyword">case</span> .timedOut:</span><br><span class="line">    <span class="built_in">print</span>(<span class="type">Thread</span>.current) <span class="comment">// &lt;NSThread: 0x6000003e4140&gt;&#123;number = 1, name = main&#125;</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"group 任务执行超时"</span>)</span><br><span class="line">&#125;</span><br><span class="line">                </span><br><span class="line"><span class="built_in">print</span>(<span class="string">"GCD队列组结束"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">/** 输出 </span></span><br><span class="line"><span class="comment">* GCD队列组开始</span></span><br><span class="line"><span class="comment">* 1、2、1、1、2、2 （随机顺序）</span></span><br><span class="line"><span class="comment">* group 任务执行超时</span></span><br><span class="line"><span class="comment">* GCD队列组结束</span></span><br><span class="line"><span class="comment">* 3、3、3</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
 
-<p><b><font style: color = red>enter()</font>与<font style: color = red>leave()</font></b></p>
+<p><b><font style: color="red">enter()</font>与<font style: color="red">leave()</font></b></p>
 <p>enter()是标示一个任务加入到队列，leave()标示一个队列中的任务执行完成</p>
 <p>注意：enter()与leave()必须成对调用。</p>
 <p>如果enter()后未调用leave()则不会触发notify，wait也只会timeout。</p>
@@ -355,6 +355,15 @@
 
 <nav id="article-nav">
   
+    <a href="/2020/07/20/iOS%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          iOS设计模式与架构模式
+        
+      </div>
+    </a>
+  
   
     <a href="/2020/07/17/hexo%E4%BD%BF%E7%94%A8/" id="article-nav-older" class="article-nav-link-wrap">
       <div class="article-nav-title">Hexo使用</div>
@@ -376,19 +385,6 @@
             </div>
         </div>
         
-        
-        <div class="toc-container tooltip-left">
-            <i class="icon-font icon-category"></i>
-            <div class="tooltip tooltip-east">
-                <span class="tooltip-item">
-                </span>
-                <span class="tooltip-content">
-                    <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#1、队列的获取与创建"><span class="toc-number">1.</span> <span class="toc-text">1、队列的获取与创建</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2、耗时操作"><span class="toc-number">2.</span> <span class="toc-text">2、耗时操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3、同步执行任务"><span class="toc-number">3.</span> <span class="toc-text">3、同步执行任务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4、异步执行任务"><span class="toc-number">4.</span> <span class="toc-text">4、异步执行任务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5、串行同步"><span class="toc-number">5.</span> <span class="toc-text">5、串行同步</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6、串行异步"><span class="toc-number">6.</span> <span class="toc-text">6、串行异步</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7、并发同步"><span class="toc-number">7.</span> <span class="toc-text">7、并发同步</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8、并发异步"><span class="toc-number">8.</span> <span class="toc-text">8、并发异步</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9、主队列同步"><span class="toc-number">9.</span> <span class="toc-text">9、主队列同步</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10、主队列异步"><span class="toc-number">10.</span> <span class="toc-text">10、主队列异步</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#11、GCD栅栏"><span class="toc-number">11.</span> <span class="toc-text">11、GCD栅栏</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#12、GCD延迟执行"><span class="toc-number">12.</span> <span class="toc-text">12、GCD延迟执行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#13、GCD队列组"><span class="toc-number">13.</span> <span class="toc-text">13、GCD队列组</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#14、型号量-semaphore"><span class="toc-number">14.</span> <span class="toc-text">14、型号量 semaphore</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#15、DIspatchWorkItem-与任务取消"><span class="toc-number">15.</span> <span class="toc-text">15、DIspatchWorkItem 与任务取消</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#参考"><span class="toc-number">16.</span> <span class="toc-text">参考</span></a></li></ol>
-                    </div>
-                </span>
-            </div>
-        </div>
         
     </div>
 </aside>
@@ -520,6 +516,10 @@
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Swift</a>
               </li>
              
@@ -529,10 +529,6 @@
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">多线程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
               </li>
             
             <div class="clearfix"></div>
