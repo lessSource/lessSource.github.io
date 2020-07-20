@@ -10,20 +10,22 @@
   <meta name="generator" content="hexo-theme-yilia-plus">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
-  <meta name="description" content="常用架构模式 MVC模式">
+  <meta name="description" content="常用架构模式 1、MVC模式 Model：模型对象封装特定于应用程序的数据，并定义操作和处理该数据的逻辑和计算。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="iOS设计模式与架构模式">
 <meta property="og:url" content="http://yoursite.com/2020/07/20/iOS%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F/index.html">
 <meta property="og:site_name" content="做一只会飞的猪">
-<meta property="og:description" content="常用架构模式 MVC模式">
+<meta property="og:description" content="常用架构模式 1、MVC模式 Model：模型对象封装特定于应用程序的数据，并定义操作和处理该数据的逻辑和计算。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/8829003-4270fb02a1c1c749.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/8829003-4270fb02a1c1c749.png">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2878464-5615d908eabb8660.png">
+<meta property="og:image" content="https://img1.3s78.com/codercto/5e60599d3f418c5a546ec261f0f5917c">
 <meta property="article:published_time" content="2020-07-20T04:29:35.000Z">
-<meta property="article:modified_time" content="2020-07-20T07:59:48.909Z">
+<meta property="article:modified_time" content="2020-07-20T11:48:50.159Z">
 <meta property="article:author" content="less">
 <meta property="article:tag" content="iOS">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/8829003-4270fb02a1c1c749.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/8829003-4270fb02a1c1c749.png">
   
     <link rel="alternative" href="/atom.xml" title="做一只会飞的猪" type="application/atom+xml">
   
@@ -197,8 +199,39 @@
   <div class="article-entry" itemprop="articleBody">
     
     <p>常用架构模式</p>
-<p>MVC模式</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/8829003-4270fb02a1c1c749.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt="斯坦福公开课给的实例图："></p>
+<h4 id="1、MVC模式"><a href="#1、MVC模式" class="headerlink" title="1、MVC模式"></a>1、MVC模式</h4><p><img src="https://upload-images.jianshu.io/upload_images/8829003-4270fb02a1c1c749.png" alt="斯坦福公开课给的实例图："></p>
+<h5 id="Model："><a href="#Model：" class="headerlink" title="Model："></a>Model：</h5><p>模型对象封装特定于应用程序的数据，并定义操作和处理该数据的逻辑和计算。<a id="more"></a></p>
+<h5 id="View："><a href="#View：" class="headerlink" title="View："></a>View：</h5><p>视图对象是用户可以看到的应用程序中的对象。视图对象知道如何绘制自身并可以响应用户操作。视图对象的主要用途是显示应用程序模型对象中的数据并启用对该数据的编辑。尽管如此，视图对象通常与MVC应用程序中的模型对象分离。</p>
+<h5 id="Controller："><a href="#Controller：" class="headerlink" title="Controller："></a>Controller：</h5><p>控制器对象充当应用程序的一个或多个视图对象与其一个或多个模型对象之间的中介。因此，控制器对象是视图对象通过其获知模型对象的变化的管道，反之亦然。控制器对象还可以为应用程序执行设置和协调任务，并管理其他对象的生命周期。</p>
+<h4 id="2、MVVM模式"><a href="#2、MVVM模式" class="headerlink" title="2、MVVM模式"></a>2、MVVM模式</h4><p><img src="https://upload-images.jianshu.io/upload_images/2878464-5615d908eabb8660.png" alt="img"></p>
+<p>中心思想是数据实现双向绑定，业务逻辑与试图的分离。MVVM模式和MVC模式一样，主要目的是分离视图（View）和模型（Model）。</p>
+<p>OC可以使用ReactiveCocoa、Swift可以使用RXSwift进行数据通信。</p>
+<h6 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h6><ol>
+<li>低耦合：视图（View）可以独立于Model变化和修改，一个ViewModel可以绑定不同的“View”上，当View变化的时候Model可以不变，当Model变化的时候View也可以不变。</li>
+<li>可重用性：你可以把一些视图逻辑防在一个ViewModel里面，让很多view重用这段视图逻辑。</li>
+<li>独立开发：开发人员可以专注于业务逻辑和数据的开发（ViewModel），设计人员可以专注于页面设计。</li>
+<li>可测试：界面素来是比较难于测试的，测试可以针对ViewModel来写。</li>
+</ol>
+<h6 id="缺点："><a href="#缺点：" class="headerlink" title="缺点："></a>缺点：</h6><p>数据绑定使得Bug很难被调试。不容易定位bug的位置。</p>
+<p>对于过大的项目，数据绑定需要花费更多的内存。</p>
+<h6 id="组成部分"><a href="#组成部分" class="headerlink" title="组成部分"></a>组成部分</h6><p>模型：模型是指代表真实状态内容的领域模型（面向对象），或指代表内容的数据访问层（以数据为中心）。</p>
+<p>视图：与MVC和MVP模式中一样，视图是用户在屏幕上看到的结构、布局和外观（UI）。</p>
+<p>视图模型：视图模型是暴露公共属性和命令的视图的抽象。MVVM没有MVC模式的控制器，也没有MVP模式的presenter，有的是一个绑定器。在视图模型中，绑定器在视图和数据绑定器之间进行通信。</p>
+<p>绑定器：声明性数据和命令绑定隐含在MVVM模式中。    </p>
+<h4 id="3、MVP模式"><a href="#3、MVP模式" class="headerlink" title="3、MVP模式"></a>3、MVP模式</h4><p><img src="https://img1.3s78.com/codercto/5e60599d3f418c5a546ec261f0f5917c" alt="iOS中MVP架构实践小技巧"></p>
+<ul>
+<li>MVP的V层是由UIViewController和UIView共同组成</li>
+<li>view将委托presenter对它自己的操作，（简单来说就是presenter发命令来控制view的交互，要你隐藏就隐藏，叫你显示就显示）</li>
+<li>presenter拥有对view交互的逻辑</li>
+<li>presenter跟model层通信，并将数据转化成对适应UI的数据并更新view</li>
+<li>presenter不需要依赖UIKit</li>
+<li>view层是单一，因为它是被动接受命令，没有主动能力</li>
+</ul>
+<p><code>presenter 作为业务逻辑的处理者，首先要向Service层拿数据赋值给model，所以它将可以向model层通信。其次，UI的处理权移交给了它，所以它需要与view成通讯，发送命令更新UI。同时，UI的响应将触发业务逻辑的处理，所以view 层向presenter层通讯，告诉他用户做了什么操作，需要你反馈对应的数据来更新UI。这样就完成了从用户交互获得交互反馈到整个业务逻辑。</code></p>
+<h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><p><a href="https://www.jianshu.com/p/da586323b174" target="_blank" rel="noopener">iOS的MVC框架模式</a></p>
+<p><a href="https://www.jianshu.com/p/6560505fa0f1" target="_blank" rel="noopener">iOS MVVM的理解与分析</a></p>
+<p><a href="https://www.jianshu.com/p/61a656431685" target="_blank" rel="noopener">iOS的MVP设计模式</a></p>
+<p><a href="https://www.codercto.com/a/38352.html" target="_blank" rel="noopener">iOS中MVP架构实践小技巧</a></p>
 
     
 
