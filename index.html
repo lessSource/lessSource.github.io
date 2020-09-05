@@ -79,6 +79,8 @@
 			
 				<li><a href="/interview/" target="_blank">面试题</a></li>
 			
+				<li><a href="/principle/" target="_blank">原理篇</a></li>
+			
 			</ul>
 		</nav>
 		<nav class="header-smart-menu">
@@ -137,6 +139,8 @@
 			
 				
 			
+				
+			
 			
 			
 			<nav class="header-nav">
@@ -155,11 +159,13 @@
 				<ul style="width: 70%">
 				
 				
-					<li style="width: 33.333333333333336%"><a href="/">主页</a></li>
+					<li style="width: 25%"><a href="/">主页</a></li>
 		        
-					<li style="width: 33.333333333333336%"><a href="/works/">作品</a></li>
+					<li style="width: 25%"><a href="/works/">作品</a></li>
 		        
-					<li style="width: 33.333333333333336%"><a href="/interview/">面试题</a></li>
+					<li style="width: 25%"><a href="/interview/">面试题</a></li>
+		        
+					<li style="width: 25%"><a href="/principle/">原理篇</a></li>
 		        
 				</ul>
 			</nav>
@@ -176,6 +182,102 @@
           </div>
           <div id="js-content" class="content-ll">
             
+
+  
+    <article id="post-alloc" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+  
+  
+    <h1 itemprop="name">
+	
+	  <a class="article-title" href="/2020/09/05/alloc/" target="_blank">alloc</a>
+  
+    </h1>
+  
+
+
+  
+  
+<a href="/2020/09/05/alloc/" class="archive-article-date">
+        <time datetime="2020-09-05T03:57:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-09-05</time>
+</a>
+
+  
+  
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    <h5 id="alloc流程"><a href="#alloc流程" class="headerlink" title="alloc流程"></a>alloc流程</h5><p>OC对象的alloc</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; alloc 底层做了些什么</span><br><span class="line"> </span><br><span class="line">LGPerson *p1 &#x3D; [LGPerson alloc];</span><br><span class="line">LGPerson *p2 &#x3D; [p1 init];</span><br><span class="line">LGPerson *p3 &#x3D; [p1 init];</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; %p 指针地址</span><br><span class="line">NSLog(@&quot;%@ - %p - %p&quot;, p1, p1, &amp;p1);</span><br><span class="line">NSLog(@&quot;%@ - %p - %p&quot;, p2, p2, &amp;p2);</span><br><span class="line">NSLog(@&quot;%@ - %p - %p&quot;, p3, p3, &amp;p3);</span><br><span class="line"></span><br><span class="line">&lt;LGPerson: 0x60000094af60&gt; - 0x60000094af60 - 0x7ffeee46d1c8</span><br><span class="line">&lt;LGPerson: 0x60000094af60&gt; - 0x60000094af60 - 0x7ffeee46d1c0</span><br><span class="line">&lt;LGPerson: 0x60000094af60&gt; - 0x60000094af60 - 0x7ffeee46d1b8</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>p1、p2、p3 三个对象的指针是不同的但是 <code>他们所指向的内存是同一片</code></li>
+<li>从而可以证明<code>alloc</code>才是创建对象-开辟内存</li>
+<li><code>init</code>只是一个初始化构造函数</li>
+</ul>
+<p><img src="https://gitee.com/lessSiming/img-storage/raw/master/alloc/alloc1.png" alt></p>
+<ol>
+<li><p>alloc</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 对象调用alloc 实际是调用NSobject的 +(id)alloc &#123; &#125; 方法</span></span><br><span class="line"><span class="comment">* 调用_objc_rootAlloc方法</span></span><br><span class="line"><span class="comment">* 传参：self</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line">+ (id)alloc &#123;</span><br><span class="line">    <span class="keyword">return</span> _objc_rootAlloc(self);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li></ol>
+    
+    <a class="article-more-a" href="/2020/09/05/alloc/#more">查看更多 >></a>
+    
+    
+
+    
+
+    
+
+  </div>
+  <div class="article-info article-info-index">
+    
+    
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">iOS</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">原理</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+    
+
+    
+
+    
+    <div class="clearfix"></div>
+  </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
 
   
     <article id="post-分类相关" class="article article-type-post  article-index" itemscope itemprop="blogPost">
@@ -317,7 +419,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">iOS</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Swift</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
@@ -822,6 +924,10 @@
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Category</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">原理</a>
               </li>
             
             <div class="clearfix"></div>

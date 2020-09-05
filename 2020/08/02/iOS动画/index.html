@@ -18,9 +18,9 @@
 <meta property="og:description" content="UIView 动画UIView动画实质上是对CoreAnimation的封装，提供简洁的动画接口。 UIView动画可以设置的动画属性有：  大小变化（frame） 拉伸变化（bounds） 中心位置（center） 旋转（transform） 透明度（alpha） 背景颜色（backgroundColor） 拉伸内容（contentStretch）">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-08-02T15:19:59.000Z">
-<meta property="article:modified_time" content="2020-08-18T04:54:51.501Z">
+<meta property="article:modified_time" content="2020-09-05T03:56:36.998Z">
 <meta property="article:author" content="less">
-<meta property="article:tag" content="iOS">
+<meta property="article:tag" content="Swift">
 <meta property="article:tag" content="动画">
 <meta name="twitter:card" content="summary">
   
@@ -81,6 +81,8 @@
 			
 				<li><a href="/interview/" target="_blank">面试题</a></li>
 			
+				<li><a href="/principle/" target="_blank">原理篇</a></li>
+			
 			</ul>
 		</nav>
 		<nav class="header-smart-menu">
@@ -139,6 +141,8 @@
 			
 				
 			
+				
+			
 			
 			
 			<nav class="header-nav">
@@ -157,11 +161,13 @@
 				<ul style="width: 70%">
 				
 				
-					<li style="width: 33.333333333333336%"><a href="/">主页</a></li>
+					<li style="width: 25%"><a href="/">主页</a></li>
 		        
-					<li style="width: 33.333333333333336%"><a href="/works/">作品</a></li>
+					<li style="width: 25%"><a href="/works/">作品</a></li>
 		        
-					<li style="width: 33.333333333333336%"><a href="/interview/">面试题</a></li>
+					<li style="width: 25%"><a href="/interview/">面试题</a></li>
+		        
+					<li style="width: 25%"><a href="/principle/">原理篇</a></li>
 		        
 				</ul>
 			</nav>
@@ -247,8 +253,25 @@
 </ol>
 <h3 id="核心动画（Core-Animation）"><a href="#核心动画（Core-Animation）" class="headerlink" title="核心动画（Core Animation）"></a>核心动画（Core Animation）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Core Animation可以用在Mac OS X和iOS平台。</span><br><span class="line">Core Animation的动画执行过程都是在后台操作的，不会阻塞主线程</span><br><span class="line">核心动画的本质：在后台移动图层中的内容，执行完毕后图层本身的位置并没有发生变化。</span><br><span class="line"></span><br><span class="line">注意：Core Animation是直接作用在CALayer上的，并非UIView.</span><br></pre></td></tr></table></figure>
 
-
-
+<h5 id="CoreGraphics、QuartzCore、CoreAnimation的区别"><a href="#CoreGraphics、QuartzCore、CoreAnimation的区别" class="headerlink" title="CoreGraphics、QuartzCore、CoreAnimation的区别"></a>CoreGraphics、QuartzCore、CoreAnimation的区别</h5><ul>
+<li><p>CoreGraphics(核心动画)</p>
+<p>它是iOS的核心图形库，包含Quartz2D绘图API接口，常用的是point，size，rect等这些图形，都定义在这个框架中，类名以CG开头的都属于CoreGraphics框架，它提供的都是C语言函数的接口</p>
+</li>
+<li><p>QuartzCore</p>
+<p>QuartzCore是位于Mac OS X的Drawin核心之上的绘图层。</p>
+</li>
+<li><p>CoreAnimation(核心动画)</p>
+<ol>
+<li>CoreAnimation就是核心动画，是一组非常强大的API，用来做动画的。</li>
+<li>CoreAnimation是跨平台的，既可以支持iOS，也支持MAC OS</li>
+<li>CoreAnimation执行动画是在后台，不会阻塞主线程</li>
+<li>CoreAnimation作用在CALayer，不是UIView</li>
+</ol>
+</li>
+<li><p>CoreGraphics和CoreAnimation的关系</p>
+<p>都是跨iOS和Mac OS使用的，区别于UIKit，并且CoreAnimation中大量使用到CoreGraphics中的类，因为实现动画要用到图形库中的东西。</p>
+</li>
+</ul>
 <h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><p><a href="https://www.jianshu.com/p/c0d7e16f8685" target="_blank" rel="noopener">iOS 动画（一）——UIView动画</a></p>
 
     
@@ -266,7 +289,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">iOS</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Swift</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
@@ -479,6 +502,10 @@
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Category</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">原理</a>
               </li>
             
             <div class="clearfix"></div>
