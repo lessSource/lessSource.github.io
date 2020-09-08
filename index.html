@@ -184,6 +184,204 @@
             
 
   
+    <article id="post-结构体内存对齐原则" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+  
+  
+    <h1 itemprop="name">
+	
+	  <a class="article-title" href="/2020/09/07/%E7%BB%93%E6%9E%84%E4%BD%93%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90%E5%8E%9F%E5%88%99/" target="_blank">结构体内存对齐原则</a>
+  
+    </h1>
+  
+
+
+  
+  
+<a href="/2020/09/07/%E7%BB%93%E6%9E%84%E4%BD%93%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90%E5%8E%9F%E5%88%99/" class="archive-article-date">
+        <time datetime="2020-09-07T15:00:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-09-07</time>
+</a>
+
+  
+  
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    <h6 id="结构体在32位和64位中各基本数据类型所占的字节数"><a href="#结构体在32位和64位中各基本数据类型所占的字节数" class="headerlink" title="结构体在32位和64位中各基本数据类型所占的字节数:"></a>结构体在32位和64位中各基本数据类型所占的字节数:</h6><table>
+<thead>
+<tr>
+<th align="center">C</th>
+<th align="center">OC</th>
+<th align="center">32位</th>
+<th align="center">64位</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">bool</td>
+<td align="center">BOOL(64位)</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">signed char</td>
+<td align="center">(_ _signed char)int8_t、BOOL(32位)</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">unsigned char</td>
+<td align="center">Boolean</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">short</td>
+<td align="center">int16_t</td>
+<td align="center">2</td>
+<td align="center">2</td>
+</tr>
+<tr>
+<td align="center">unsigned short</td>
+<td align="center">unichar</td>
+<td align="center">2</td>
+<td align="center">2</td>
+</tr>
+<tr>
+<td align="center">int int32_t</td>
+<td align="center">NSInteger(32位)、boolean_t(32位)</td>
+<td align="center">4</td>
+<td align="center">4</td>
+</tr>
+<tr>
+<td align="center">unsigned int</td>
+<td align="center">boolean_t(64位)、NSUInteger(32位)</td>
+<td align="center">4</td>
+<td align="center">4</td>
+</tr>
+<tr>
+<td align="center">long</td>
+<td align="center">NSInteger(64位)</td>
+<td align="center">4</td>
+<td align="center">8</td>
+</tr>
+<tr>
+<td align="center">unsigned long</td>
+<td align="center">NSUInteger(64位)</td>
+<td align="center">4</td>
+<td align="center">8</td>
+</tr>
+<tr>
+<td align="center">long long</td>
+<td align="center">int64_t</td>
+<td align="center">8</td>
+<td align="center">8</td>
+</tr>
+<tr>
+<td align="center">float</td>
+<td align="center">CGFloat(32位)</td>
+<td align="center">4</td>
+<td align="center">4</td>
+</tr>
+<tr>
+<td align="center">double</td>
+<td align="center">CGFloat(64位)</td>
+<td align="center">8</td>
+<td align="center">8</td>
+</tr>
+</tbody></table>
+<h5 id="内存对齐"><a href="#内存对齐" class="headerlink" title="内存对齐"></a>内存对齐</h5><p>现代计算机中内存空间都是按照 byte 划分的，从理论上讲似乎对任何类型的变量的访问可以从任何地址开始，但是实际的计算机系统对基本类型数据在内存中存放的位置有限制，它们会要求这些数据的首地址的值是某个数k（通常它为4或8）的倍数，这就是所谓的内存对齐。</p>
+<h5 id="为什么要内存对齐"><a href="#为什么要内存对齐" class="headerlink" title="为什么要内存对齐?"></a>为什么要内存对齐?</h5><ol>
+<li><strong>平台原因(移植原因)</strong>：不是所有的硬件平台都能访问任意地址上的任意数据的；某些硬件平台只能在某些地址处取某些特定类型的数据，否则抛出硬件异常。</li>
+<li><strong>性能原因</strong>：数据结构(尤其是栈)应该尽可能地在自然边界上对齐。原因在于，为了访问未对齐的内存，处理器需要作两次内存访问；而对齐的内存访问仅需要一次访问。</li>
+</ol>
+<ul>
+<li>假如没有内存对齐机制，数据可以任意存放，现在一个int变量存放在从地址1开始的联系四个字节地址中，该处理器去取数据时，要先从0地址开始读取第一个4字节块,剔除不想要的字节（0地址）,然后从地址4开始读取下一个4字节块,同样剔除不要的数据（5，6，7地址）,最后留下的两块数据合并放入寄存器。这需要做很多工作。</li>
+<li>现在有了内存对齐的，int类型数据只能存放在按照对齐规则的内存中，比如说0地址开始的内存。那么现在该处理器在取数据时一次性就能将数据读出来了，而且不需要做额外的操作，提高了效率。</li>
+</ul>
+<h5 id="内存对齐规则"><a href="#内存对齐规则" class="headerlink" title="内存对齐规则"></a>内存对齐规则</h5><p><strong>基本类型</strong>的对齐值就是其sizeof值;</p>
+<p><strong>数据成员对齐规则</strong>：结构(struct)(或联合(union))的数据成员，第一个数据成员放在offset为0的地方，以后每个数据成员的对齐按照#pragma pack指定的数值和这个数据成员自身长度中，比较小的那个进行;</p>
+<p><strong>结构(或联合)的整体对齐规则</strong>：在数据成员完成各自对齐之后，结构(或联合)本身也要进行对齐，对齐将按照#pragma pack指定的数值和结构(或联合)最大数据成员长度中，比较小的那个进行;</p>
+<p>例：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">LGStruct1</span> &#123;</span></span><br><span class="line">    <span class="keyword">double</span> a;  </span><br><span class="line">    <span class="keyword">char</span> b;    </span><br><span class="line">    <span class="keyword">int</span> c;      </span><br><span class="line">    short d;  </span><br><span class="line">&#125;struct1;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">LGStruct2</span> &#123;</span></span><br><span class="line">    <span class="keyword">double</span> a;  <span class="comment">// 8位</span></span><br><span class="line">    <span class="keyword">int</span> b;     <span class="comment">// 4位</span></span><br><span class="line">    <span class="keyword">char</span> c;    <span class="comment">// 1位</span></span><br><span class="line">    short d;   <span class="comment">// 2位</span></span><br><span class="line">&#125;struct2;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> * argv[])</span> </span>&#123;</span><br><span class="line">    NSString * appDelegateClassName;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line"></span><br><span class="line">        NSLog(@<span class="string">"%lu-%lu"</span>,<span class="keyword">sizeof</span>(struct1),<span class="keyword">sizeof</span>(struct2));</span><br><span class="line">        </span><br><span class="line">        appDelegateClassName = NSStringFromClass([AppDelegate class]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> UIApplicationMain(argc, argv, nil, appDelegateClassName);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//  struct1大小: 24    struct2大小: 16</span></span><br></pre></td></tr></table></figure>
+
+<p>计算规则：</p>
+<ul>
+<li>结构体中每个数据成员的偏移位置是数据成员本身尺寸的倍数。</li>
+<li>结构体的尺寸是最大基础类型数据成员尺寸的倍数。</li>
+<li>如果有结构体嵌套时，被嵌套的结构体成员的偏移位置就是被嵌套结构体中尺寸最大的基础类型数据成员尺寸的倍数。嵌套结构体的尺寸则是所有被嵌套中的以及自身中的最大基础类型数据成员尺寸的倍数。</li>
+</ul>
+<p>按照上述的规则，就可以得出上面示例结构体strunt2在64位系统下的尺寸了：</p>
+<p><img src="https://gitee.com/lessSiming/img-storage/raw/master/alloc/%E5%86%85%E5%AD%98%E6%8E%92%E5%88%97.png" alt></p>
+<p>在上面的布局图中可以看出：</p>
+<ol>
+<li>b数据成员是double型，它占用8个字节的内存，而且是结构体中的第一个数据成员，第一个数据成员的偏移位置总是从0开始(0是任何数据类型尺寸的倍数)。</li>
+<li>b数据成员是int，它占用4个字节的内存，它的偏移位置是8(8是4的倍数)。</li>
+<li>c数据成员是char, 它占用1个字节的内存，它的偏移位置是12(12是1的倍数)。</li>
+<li>d数据成员是short, 它占用2个字节的内存，它的偏移量是13(13是2的倍数，添加偏移量到2的倍数14)。</li>
+<li>整个结构体中最大数据成员的尺寸是dounle，它占用8个字节的内存，因此结构体的尺寸是8的倍数也就是16个字节。同时看到在尾部留下了1个字节。</li>
+</ol>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h5 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h5><p>(1) 结构体第一个成员的偏移量（offset）为0，以后每个成员相对于结构体首地址的 offset 都是该成员大小与有效对齐值中较小那个的整数倍，如有需要编译器会在成员之间加上填充字节。<br>(2) 结构体的总大小为 有效对齐值 的整数倍，如有需要编译器会在最末一个成员之后加上填充字节。</p>
+
+    
+
+    
+
+    
+
+  </div>
+  <div class="article-info article-info-index">
+    
+    
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">iOS</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+    
+
+    
+
+    
+    <div class="clearfix"></div>
+  </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-alloc" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
